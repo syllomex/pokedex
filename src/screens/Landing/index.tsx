@@ -1,5 +1,8 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
+
 import Button from '../../components/Button';
+
 import {
   Container,
   Description,
@@ -9,18 +12,22 @@ import {
   LogoTitle,
 } from './styles';
 
-const Landing: React.FC = () => (
-  <Container>
-    <LogoContainer>
-      <LogoTitle />
-      <LogoImage />
-    </LogoContainer>
+const Landing: React.FC = () => {
+  const { navigate } = useNavigation();
 
-    <BottomContainer>
-      <Description>Pra não chamar de Pokédex!</Description>
-      <Button>Entrar</Button>
-    </BottomContainer>
-  </Container>
-);
+  return (
+    <Container>
+      <LogoContainer>
+        <LogoTitle />
+        <LogoImage />
+      </LogoContainer>
+
+      <BottomContainer>
+        <Description>Pra não chamar de Pokédex!</Description>
+        <Button onPress={() => navigate('PokeList')}>Entrar</Button>
+      </BottomContainer>
+    </Container>
+  );
+};
 
 export default Landing;
