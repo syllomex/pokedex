@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import React, {
   useCallback, useEffect, useRef, useState,
@@ -12,6 +13,7 @@ import { PokemonList, PokemonListResult } from '../../interfaces/api';
 import { Container, Footer } from './styles';
 
 const PokeList: React.FC = () => {
+  const { navigate } = useNavigation();
   const [pokeList, setPokeList] = useState<PokemonListResult[] | null>();
 
   const page = useRef(0);
@@ -55,7 +57,13 @@ const PokeList: React.FC = () => {
         contentContainerStyle={{ paddingHorizontal: '5%' }}
         keyExtractor={(item) => item.name}
         renderItem={({ item, index }) => (
-          <PokemonCard key={item.name} index={index} name={item.name} url={item.url} />
+          <PokemonCard
+            key={item.name}
+            index={index}
+            name={item.name}
+            url={item.url}
+            navigate={navigate}
+          />
         )}
         ListFooterComponent={
           !listEnded ? (

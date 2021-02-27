@@ -7,16 +7,19 @@ import {
   Card, ArrowIcon, Image, ImageContainer, Name,
 } from './styles';
 
-type Props = PokemonListResult & { index: number };
+type Props = PokemonListResult & {
+  index: number;
+  navigate: (route: string, params?: any) => void;
+};
 
 class PokemonCard extends PureComponent<Props> {
   imageUrl = (id: number) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
 
   render () {
-    const { name, index } = this.props;
+    const { name, index, navigate } = this.props;
 
     return (
-      <Card>
+      <Card onPress={() => navigate('PokeDetails')}>
         <ImageContainer>
           <Image source={{ uri: this.imageUrl(index + 1) }} />
         </ImageContainer>
