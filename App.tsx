@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -10,23 +10,25 @@ import { useFonts } from 'expo-font';
 import Righteous from './src/assets/fonts/Righteous/Righteous-Regular.ttf';
 import Stack from './src/assets/routes';
 
-import openRealm from './src/database';
+import DatabaseProvider from './src/database/provider';
 
 export default function App () {
   const [loaded] = useFonts({
     Righteous,
   });
 
-  useEffect(() => {
-    openRealm();
-  }, []);
-
-  if (!loaded) return <AppLoading />;
+  const [loading, setLoading] = useState(true);
 
   return (
-    <NavigationContainer>
-      <Stack />
-      <StatusBar style="auto" />
-    </NavigationContainer>
+    <DatabaseProvider setLoading={setLoading}>
+      {loading || !loaded ? (
+        <AppLoading />
+      ) : (
+        <NavigationContainer>
+          <Stack />
+          <StatusBar style="auto" />
+        </NavigationContainer>
+      )}
+    </DatabaseProvider>
   );
 }

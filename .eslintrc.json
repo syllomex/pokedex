@@ -30,6 +30,7 @@
   "rules": {
     "no-console": "warn",
     "no-underscore-dangle": "off",
+    "no-unused-vars": "warn",
     "react/jsx-filename-extension": [1, { "extensions": [".ts", ".tsx"] }],
     "react/prop-types": "off",
     "react/style-prop-object": "off",

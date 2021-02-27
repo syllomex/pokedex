@@ -1,15 +1,14 @@
 import Realm from 'realm';
-import { ObjectId } from 'bson';
 
 class Pokemon {
-  public _id: ObjectId;
+  public id: number;
 
   public name: string;
 
   public url: string;
 
-  constructor ({ name, url, id }: { name: string; url: string; id: ObjectId }) {
-    this._id = id || new ObjectId();
+  constructor ({ name, url, id }: { name: string; url: string; id: number }) {
+    this.id = id;
     this.name = name;
     this.url = url;
   }
@@ -17,11 +16,11 @@ class Pokemon {
   static schema: Realm.ObjectSchema = {
     name: 'Pokemon',
     properties: {
-      _id: 'objectId',
+      id: 'int',
       name: 'string',
       url: 'string',
     },
-    primaryKey: '_id',
+    primaryKey: 'id',
   };
 }
 

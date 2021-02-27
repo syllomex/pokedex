@@ -11,7 +11,16 @@ const Stack: React.FC = () => (
   <Navigator initialRouteName="Landing" screenOptions={{ headerShown: false }}>
     <Screen name="Landing" component={Landing} />
     <Screen name="PokeList" component={PokeList} />
-    <Screen name="PokeDetails" component={PokeDetails} />
+    <Screen
+      name="PokeDetails"
+      component={PokeDetails}
+      options={{
+        headerShown: true,
+        headerTitle: '',
+        headerStyle: { elevation: 0 },
+        headerTransparent: true,
+      }}
+    />
   </Navigator>
 );
 

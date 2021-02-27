@@ -4,18 +4,26 @@ import React, {
   useCallback, useEffect, useRef, useState,
 } from 'react';
 import { FlatList } from 'react-native';
+import colors from '../../assets/colors';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
 import PokemonCard from '../../components/PokemonCard';
+import { useDatabase } from '../../database/provider';
 
 import { PokemonList, PokemonListResult } from '../../interfaces/api';
 
-import { Container, Footer } from './styles';
+import {
+  Container, EmptyMessage, Footer, Search,
+} from './styles';
 
 const PokeList: React.FC = () => {
   const { navigate } = useNavigation();
-  const [pokeList, setPokeList] = useState<PokemonListResult[] | null>();
+  const { realm } = useDatabase();
 
+  const [pokeList, setPokeList] = useState<PokemonListResult[] | null>();
+  const [filteredList, setFilteredList] = useState<PokemonListResult[] | undefined>();
+
+  const query = useRef<string>();
   const page = useRef(0);
   const end = useRef(false);
 
@@ -46,6 +54,19 @@ const PokeList: React.FC = () => {
     }
   }, []);
 
+  const handleSearch = useCallback(() => {
+    if (!query.current || query.current.length === 0) return setFilteredList(undefined);
+
+    setFilteredList(
+      realm.current
+        ?.objects('Pokemon')
+        .filtered(`name CONTAINS '${query.current}'`)
+        .map((pokemon) => pokemon.toJSON()),
+    );
+
+    return null;
+  }, [realm]);
+
   useEffect(() => {
     fetchPokemonList();
   }, [fetchPokemonList]);
@@ -53,26 +74,33 @@ const PokeList: React.FC = () => {
   return (
     <Container>
       <FlatList
-        data={pokeList}
+        data={filteredList || pokeList}
         contentContainerStyle={{ paddingHorizontal: '5%' }}
         keyExtractor={(item) => item.name}
-        renderItem={({ item, index }) => (
-          <PokemonCard
-            key={item.name}
-            index={index}
-            name={item.name}
-            url={item.url}
-            navigate={navigate}
+        renderItem={({ item }) => (
+          <PokemonCard key={item.name} name={item.name} url={item.url} navigate={navigate} />
+        )}
+        ListHeaderComponent={(
+          <Search
+            placeholder="Buscar"
+            selectionColor={colors.gray}
+            onSubmitEditing={handleSearch}
+            onChangeText={(text) => {
+              query.current = text;
+              handleSearch();
+              if (text.length === 0) setFilteredList(undefined);
+            }}
           />
         )}
         ListFooterComponent={
-          !listEnded ? (
+          !listEnded && !filteredList ? (
             <Footer>
               <LoadingSpinner />
             </Footer>
           ) : null
         }
-        onEndReached={fetchPokemonList}
+        ListEmptyComponent={<EmptyMessage>Nenhum pokémon encontrado!</EmptyMessage>}
+        onEndReached={() => !filteredList && fetchPokemonList()}
         onEndReachedThreshold={0.7}
       />
     </Container>
