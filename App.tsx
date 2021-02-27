@@ -1,21 +1,24 @@
+import 'react-native-gesture-handler';
 import React from 'react';
+import AppLoading from 'expo-app-loading';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { useFonts } from 'expo-font';
+
+import Righteous from './src/assets/fonts/Righteous/Righteous-Regular.ttf';
+import Stack from './src/assets/routes';
 
 export default function App () {
+  const [loaded] = useFonts({
+    Righteous,
+  });
+
+  if (!loaded) return <AppLoading />;
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <NavigationContainer>
+      <Stack />
       <StatusBar style="auto" />
-    </View>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
