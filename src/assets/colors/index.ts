@@ -6,4 +6,5 @@ export default {
   black: '#242424',
   yellow: '#FEC401',
   background: '#FDFDFD',
+  blueTransparent: '#25ACFA22',
 };
