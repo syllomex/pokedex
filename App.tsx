@@ -11,6 +11,7 @@ import Righteous from './src/assets/fonts/Righteous/Righteous-Regular.ttf';
 import Stack from './src/assets/routes';
 
 import DatabaseProvider from './src/database/provider';
+import colors from './src/assets/colors';
 
 export default function App () {
   const [loaded] = useFonts({
@@ -26,7 +27,7 @@ export default function App () {
       ) : (
         <NavigationContainer>
           <Stack />
-          <StatusBar style="auto" />
+          <StatusBar style="dark" translucent={false} backgroundColor={colors.background} />
         </NavigationContainer>
       )}
     </DatabaseProvider>
