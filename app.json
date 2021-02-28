@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Poke Picker",
+    "name": "PokePicker",
     "slug": "pokepicker",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,15 +13,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.leonardosantos.pokepicker",
-      "buildNumber": "1.0.0"
+      "supportsTablet": true
     },
     "android": {
-      "package": "com.leonardosantos.pokepicker",
-      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
