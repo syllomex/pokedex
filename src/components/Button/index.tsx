@@ -1,21 +1,17 @@
 import React from 'react';
 
-import {
-  ButtonComponent, Container, InnerContainer, Text,
-} from './styles';
+import { Container, InnerContainer, Text } from './styles';
 
 type Props = {
   onPress?: () => void;
 };
 
 const Button: React.FC<Props> = ({ children, onPress }) => (
-  <ButtonComponent onPress={onPress}>
-    <Container>
-      <InnerContainer>
-        <Text>{children}</Text>
-      </InnerContainer>
-    </Container>
-  </ButtonComponent>
+  <Container>
+    <InnerContainer onPress={onPress}>
+      <Text>{children}</Text>
+    </InnerContainer>
+  </Container>
 );
 
 export default Button;
