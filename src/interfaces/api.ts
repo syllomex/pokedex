@@ -30,7 +30,7 @@ export interface Pokemon {
   weight: number;
   sprites: {
     front_default: string;
-    front_shiny: string;
+    front_shiny?: string;
   };
   species: {
     url: string;
@@ -44,6 +44,16 @@ export interface Species {
     url: string;
   };
   is_legendary: boolean;
+  generation: {
+    url: string;
+  };
+}
+
+// https://pokeapi.co/api/v2/generation/{id or name}/
+export interface Generation {
+  main_region: {
+    name: string;
+  };
 }
 
 // https://pokeapi.co/api/v2/evolution-chain/{id}/

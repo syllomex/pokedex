@@ -85,6 +85,7 @@ const PokeList: React.FC = () => {
           }}
         />
       </SearchContainer>
+
       <FlatList
         data={filteredList || pokeList}
         contentContainerStyle={{ paddingHorizontal: '5%' }}

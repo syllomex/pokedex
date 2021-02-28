@@ -7,7 +7,7 @@ export const Container = styled.SafeAreaView`
   flex: 1;
   background-color: ${colors.background};
   
-  padding-top: 8px;
+  padding-top: 48px;
 `;
 
 export const Footer = styled.View`
