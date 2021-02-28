@@ -4,6 +4,7 @@ import { PokemonListResult } from '../../interfaces/api';
 
 import capitalize from '../../utils/capitalize';
 import getIdFromUrl from '../../utils/getIdFromUrl';
+import imageUrl from '../../utils/imageUrl';
 
 import {
   Card, ArrowIcon, Image, ImageContainer, Name,
@@ -14,15 +15,14 @@ type Props = PokemonListResult & {
 };
 
 class PokemonCard extends PureComponent<Props> {
-  imageUrl = (id: number) => `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id}.png`;
-
   render () {
     const { name, url, navigate } = this.props;
+    const id = getIdFromUrl(url);
 
     return (
-      <Card onPress={() => navigate('PokeDetails')}>
+      <Card onPress={() => navigate('PokeDetails', { name, id })}>
         <ImageContainer>
-          <Image source={{ uri: this.imageUrl(getIdFromUrl(url)) }} />
+          <Image source={{ uri: imageUrl(id) }} />
         </ImageContainer>
         <Name>{capitalize(name)}</Name>
         <ArrowIcon />

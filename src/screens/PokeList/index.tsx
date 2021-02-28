@@ -13,7 +13,7 @@ import { useDatabase } from '../../database/provider';
 import { PokemonList, PokemonListResult } from '../../interfaces/api';
 
 import {
-  Container, EmptyMessage, Footer, Search,
+  Container, EmptyMessage, Footer, Search, SearchContainer,
 } from './styles';
 
 const PokeList: React.FC = () => {
@@ -73,24 +73,24 @@ const PokeList: React.FC = () => {
 
   return (
     <Container>
+      <SearchContainer>
+        <Search
+          placeholder="Buscar"
+          selectionColor={colors.gray}
+          onSubmitEditing={handleSearch}
+          onChangeText={(text) => {
+            query.current = text;
+            handleSearch();
+            if (text.length === 0) setFilteredList(undefined);
+          }}
+        />
+      </SearchContainer>
       <FlatList
         data={filteredList || pokeList}
         contentContainerStyle={{ paddingHorizontal: '5%' }}
         keyExtractor={(item) => item.name}
         renderItem={({ item }) => (
           <PokemonCard key={item.name} name={item.name} url={item.url} navigate={navigate} />
-        )}
-        ListHeaderComponent={(
-          <Search
-            placeholder="Buscar"
-            selectionColor={colors.gray}
-            onSubmitEditing={handleSearch}
-            onChangeText={(text) => {
-              query.current = text;
-              handleSearch();
-              if (text.length === 0) setFilteredList(undefined);
-            }}
-          />
         )}
         ListFooterComponent={
           !listEnded && !filteredList ? (
