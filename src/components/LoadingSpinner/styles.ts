@@ -4,6 +4,9 @@ import colors from '../../assets/colors';
 export const Container = styled.View`
   flex: 1;
   background-color: ${colors.background};
+
+  justify-content: center;
+  align-items: center;
 `;
 
 export const Indicator = styled.ActivityIndicator``;
