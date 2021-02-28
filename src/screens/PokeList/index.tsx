@@ -5,18 +5,15 @@ import React, {
 } from 'react';
 import { FlatList } from 'react-native';
 
-import colors from '../../assets/colors';
-
 import LoadingSpinner from '../../components/LoadingSpinner';
 import PokemonCard from '../../components/PokemonCard';
+import SearchBox from '../../components/SearchBox';
 
 import { useDatabase } from '../../database/provider';
 
 import { PokemonList, PokemonListResult } from '../../interfaces/api';
 
-import {
-  Container, EmptyMessage, Footer, Search, SearchContainer,
-} from './styles';
+import { Container, EmptyMessage, Footer } from './styles';
 
 const PokeList: React.FC = () => {
   const { navigate } = useNavigation();
@@ -24,6 +21,7 @@ const PokeList: React.FC = () => {
 
   const [pokeList, setPokeList] = useState<PokemonListResult[] | null>();
   const [filteredList, setFilteredList] = useState<PokemonListResult[] | undefined>();
+  const [refreshing, setRefreshing] = useState(false);
 
   const query = useRef<string>();
   const page = useRef(0);
@@ -63,32 +61,45 @@ const PokeList: React.FC = () => {
     return null;
   }, [search]);
 
+  const handleChangeText = useCallback(
+    (text: string) => {
+      query.current = text;
+      handleSearch();
+      if (text.length === 0) setFilteredList(undefined);
+    },
+    [handleSearch],
+  );
+
+  const handleRefresh = useCallback(async () => {
+    setPokeList(undefined);
+    page.current = 0;
+    setRefreshing(true);
+    await fetchPokemonList();
+    setRefreshing(false);
+  }, [fetchPokemonList]);
+
   useEffect(() => {
     fetchPokemonList();
   }, [fetchPokemonList]);
 
   return (
     <Container>
-      <SearchContainer>
-        <Search
-          placeholder="Buscar"
-          selectionColor={colors.gray}
-          onSubmitEditing={handleSearch}
-          onChangeText={text => {
-            query.current = text;
-            handleSearch();
-            if (text.length === 0) setFilteredList(undefined);
-          }}
-        />
-      </SearchContainer>
+      <SearchBox
+        handleSearch={handleSearch}
+        handleChangeText={handleChangeText}
+        onPressCancel={() => setFilteredList(undefined)}
+        cancelButtonShown={!!filteredList}
+      />
 
       <FlatList
         data={filteredList || pokeList}
-        contentContainerStyle={{ paddingHorizontal: '5%' }}
+        contentContainerStyle={{ paddingHorizontal: '5%', paddingTop: 16 }}
         keyExtractor={item => item.name}
         renderItem={({ item }) => (
           <PokemonCard key={item.name} name={item.name} url={item.url} navigate={navigate} />
         )}
+        onRefresh={handleRefresh}
+        refreshing={refreshing}
         ListFooterComponent={
           !listEnded && !filteredList ? (
             <Footer>
