@@ -4,10 +4,12 @@ import React, {
   useCallback, useEffect, useRef, useState,
 } from 'react';
 import { FlatList } from 'react-native';
-import colors from '../../assets/colors';
-import LoadingSpinner from '../../components/LoadingSpinner';
 
+import colors from '../../assets/colors';
+
+import LoadingSpinner from '../../components/LoadingSpinner';
 import PokemonCard from '../../components/PokemonCard';
+
 import { useDatabase } from '../../database/provider';
 
 import { PokemonList, PokemonListResult } from '../../interfaces/api';
@@ -18,7 +20,7 @@ import {
 
 const PokeList: React.FC = () => {
   const { navigate } = useNavigation();
-  const { realm } = useDatabase();
+  const { search } = useDatabase();
 
   const [pokeList, setPokeList] = useState<PokemonListResult[] | null>();
   const [filteredList, setFilteredList] = useState<PokemonListResult[] | undefined>();
@@ -44,7 +46,7 @@ const PokeList: React.FC = () => {
         setListEnded(true);
       }
 
-      setPokeList((currentList) => {
+      setPokeList(currentList => {
         if (!currentList) return data.results;
 
         return [...currentList, ...data.results];
@@ -56,16 +58,10 @@ const PokeList: React.FC = () => {
 
   const handleSearch = useCallback(() => {
     if (!query.current || query.current.length === 0) return setFilteredList(undefined);
-
-    setFilteredList(
-      realm.current
-        ?.objects('Pokemon')
-        .filtered(`name CONTAINS '${query.current}'`)
-        .map((pokemon) => pokemon.toJSON()),
-    );
+    search(query.current, setFilteredList);
 
     return null;
-  }, [realm]);
+  }, [search]);
 
   useEffect(() => {
     fetchPokemonList();
@@ -78,7 +74,7 @@ const PokeList: React.FC = () => {
           placeholder="Buscar"
           selectionColor={colors.gray}
           onSubmitEditing={handleSearch}
-          onChangeText={(text) => {
+          onChangeText={text => {
             query.current = text;
             handleSearch();
             if (text.length === 0) setFilteredList(undefined);
@@ -89,7 +85,7 @@ const PokeList: React.FC = () => {
       <FlatList
         data={filteredList || pokeList}
         contentContainerStyle={{ paddingHorizontal: '5%' }}
-        keyExtractor={(item) => item.name}
+        keyExtractor={item => item.name}
         renderItem={({ item }) => (
           <PokemonCard key={item.name} name={item.name} url={item.url} navigate={navigate} />
         )}

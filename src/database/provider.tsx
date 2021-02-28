@@ -1,12 +1,13 @@
+import { WebSQLDatabase } from 'expo-sqlite';
 import React, {
   useCallback, useContext, useEffect, useRef,
 } from 'react';
-import Realm from 'realm';
 
-import openRealm from '.';
+import openDatabase from '.';
+import { PokemonListResult } from '../interfaces/api';
 
 type Context = {
-  realm: React.MutableRefObject<Realm | undefined>;
+  db: React.MutableRefObject<WebSQLDatabase | undefined>;
 };
 
 const DatabaseContext = React.createContext({} as Context);
@@ -16,13 +17,13 @@ type Props = {
 };
 
 const DatabaseProvider: React.FC<Props> = ({ children, setLoading }) => {
-  const realm = useRef<Realm>();
+  const db = useRef<WebSQLDatabase>();
 
   const init = useCallback(async () => {
     setLoading(true);
 
-    const result = await openRealm();
-    if (result) realm.current = result;
+    const result = await openDatabase();
+    if (result) db.current = result;
 
     setLoading(false);
   }, [setLoading]);
@@ -31,12 +32,31 @@ const DatabaseProvider: React.FC<Props> = ({ children, setLoading }) => {
     init();
   }, [init]);
 
-  return <DatabaseContext.Provider value={{ realm }}>{children}</DatabaseContext.Provider>;
+  return <DatabaseContext.Provider value={{ db }}>{children}</DatabaseContext.Provider>;
 };
 
 const useDatabase = () => {
-  const { realm } = useContext(DatabaseContext);
-  return { realm };
+  const { db } = useContext(DatabaseContext);
+
+  const search = (name: string, callback: (result: PokemonListResult[]) => void): void => {
+    if (!db.current) {
+      callback([]);
+      return;
+    }
+
+    db.current.transaction(tx => {
+      tx.executeSql(
+        `SELECT * FROM pokemons WHERE name LIKE '%${name}%'`,
+        undefined,
+        (_, { rows }) => {
+          const result = JSON.parse(JSON.stringify(rows))._array;
+          callback(result);
+        },
+      );
+    });
+  };
+
+  return { db, search };
 };
 
 export default DatabaseProvider;
