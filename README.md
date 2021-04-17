@@ -2,7 +2,7 @@
 <img src="https://i.imgur.com/SAMXXKe.png" width="300" />
 <br><br>
 <div>
-<img src="https://img.shields.io/badge/%3C%2F%3E-TypeScript-blue">
+<img src="https://img.shields.io/github/languages/top/syllomex/pokepicker">
 <img src="https://img.shields.io/badge/framework-Expo-white">
 </div>
 
